@@ -12,6 +12,7 @@ contract HODL {
 	}
 
 	struct Team {
+	    uint8 playersCurrentSize;
 		mapping(address => Player) players;
 	}
 
@@ -27,9 +28,12 @@ contract HODL {
 		// The size of the teams must greater than 0 and less than 4. 
 		require(size <= 4 && size > 0);
 
+		// Assign the size of each team. 
+		teamSize = size;
+
 		// Add teams to mapping. 
-		teams[1] = Team();
-		teams[2] = Team();
+		teams[1] = Team(0);
+		teams[2] = Team(0);
 
 	}
 
@@ -40,16 +44,22 @@ contract HODL {
 		require(msg.value > 0);
 		require(matchIsFinished == false);
 
+		// Make sure that the team the user is trying to enter is not filled. 
+		require(teams[teamNumber].playersCurrentSize < teamSize);
+
 		if (teams[teamNumber].players[msg.sender].userDeposit.releaseTime == 0) {
 			uint256 releaseTime = now + RELEASE_TIME;
 			teams[teamNumber].players[msg.sender].userDeposit = Deposit(msg.value, releaseTime);
-		} else {
 
+			// Update the size of the team.
+			teams[teamNumber].playersCurrentSize = teams[teamNumber].playersCurrentSize + 1;
+		} else {
+			// We could add the amount they want to add. 
 		}
 	}
 
 	function withdraw(uint8 teamNumber) public {
-		require(teamNumber == 1 || teamNumber == 2)
+		require(teamNumber == 1 || teamNumber == 2);
 		require(teams[teamNumber].players[msg.sender].userDeposit.value > 0);
         require(teams[teamNumber].players[msg.sender].userDeposit.releaseTime < now);
         
