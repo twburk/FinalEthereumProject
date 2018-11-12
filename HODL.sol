@@ -12,35 +12,50 @@ contract HODL {
 	}
 
 	struct Team {
-		// Will hold all the players.
 		mapping(address => Player) players;
 	}
 
-	struct Match {
-		uint8 maxPlayersPerTeam;
-		
-		// For now only two teams per match. 
-		//uint8 private maxTeamPerGame = 2;
+	mapping(int => Team) teams;
 
-		Team teamOne;
-		Team teamTwo;
-	}
-
-	// Mapping of name to match.
-	mapping(string => Match) matches;
-
-	// matches will hold all the active matches.
+	uint8 public teamSize;
 	uint256 public RELEASE_TIME = 1 minutes;
 
+	// This will be set to false once the match is finished. 
+	bool matchIsFinished = false;
 
-	function HODL(string matchName, uint8 teamNumber) public  {
-		// If match name exists, add uesr to the match.
-		// If match name does not exist, create a new match with the name
-		// and assign the user to the team desired. 
+	function HODL(uint8 size) public {
+		// The size of the teams must greater than 0 and less than 4. 
+		require(size <= 4 && size > 0);
 
-		// teamNumber should be 1 or 2. 
+		// Add teams to mapping. 
+		teams[1] = Team();
+		teams[2] = Team();
+
+	}
+
+	function deposit(uint8 teamNumber) public payable {
+		// User must pick either 1 or 2 for the team number.
 		require(teamNumber == 1 || teamNumber == 2);
-		// Length of match name should be greater than 0. 
-		require(bytes(matchName).length != 0);
+		// The user must also submit a value that is greater than 0 
+		require(msg.value > 0);
+		require(matchIsFinished == false);
+
+		if (teams[teamNumber].players[msg.sender].userDeposit.releaseTime == 0) {
+			uint256 releaseTime = now + RELEASE_TIME;
+			teams[teamNumber].players[msg.sender].userDeposit = Deposit(msg.value, releaseTime);
+		} else {
+
+		}
+	}
+
+	function withdraw(uint8 teamNumber) public {
+		require(teamNumber == 1 || teamNumber == 2)
+		require(teams[teamNumber].players[msg.sender].userDeposit.value > 0);
+        require(teams[teamNumber].players[msg.sender].userDeposit.releaseTime < now);
+        
+        msg.sender.transfer(teams[teamNumber].players[msg.sender].userDeposit.value);
+        
+        teams[teamNumber].players[msg.sender].userDeposit.value = 0;
+        teams[teamNumber].players[msg.sender].userDeposit.releaseTime = 0;
 	}
 }
