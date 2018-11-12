@@ -1,0 +1,53 @@
+Smart Contract:
+
+	- Group HODL Contract:	
+		- There are two teams of >= 1 players.
+		- Teams submit amount of money to be kept by HODL contract.
+		- If ANY player in team X widthdraws their money from the HOLD contract:
+			- players in team X get their money back minus any penalties.
+		- If players in team Y do not widthdraw their money before team X:
+			- Players in team Y divide the amount earned from the penalties from 
+				team X.
+		- New players cannot be added to teams after the smart contract is created
+			and money in the HODL contract is locked.
+		- Dishonest Players:
+			- If a player tries to change the amount they orignially submitted, the player will
+				get their money back minus any penality fee that will be distributed between the
+				winning team players.
+			- If a player tries to reenter game in the other team, they will be labelled as a malicious
+				player and will be returned their money minus any penalty fee for being a maliciious player. 
+				This player will not be allowed to enter the match afterwards.
+- Structs:
+	- Game:
+		- Logged time that all users deposited money. 
+		- Teams in game. 
+	- Team:
+		- Array of players in team. 
+		- Total amount deposited by all team members. 
+		- Logged start time. 
+	- Player:
+		- Amount deposited.
+		- Logged time of depisit.
+
+- Functions:
+	- function hodlAmountDeposit() public payable
+		- This is the initial deposit from each user.
+		- In this funciton the user will be assigned to a team.
+		- Once all users have submitted their amounts, the timer will log that time
+			as the start time.
+		- The end time will be when a player initiates withdrawal.
+	- function initiateWithdrawal() public
+		- This function will log the end time. 
+		- Log who the winning players are.
+		- Log who the losing players are. 
+	- function calculateLoss() public
+		- Calculate the fee for each losing player.
+		- Calculate how much each of the winning players gets.
+		- Fee rewards will be based off of percentages.
+		- Fee penalties will be based off of precentages. 
+	- function payWinners() public
+		- Return the money to the winning players.
+		- Deposit the winning amount to the winning players.
+		- Return the amount of money deposited by the losing players minus
+			the amount of their respective penalties. 
+
