@@ -28,7 +28,10 @@ contract HODL {
 	// Time will be varied and updated. 
 	uint256 public RELEASE_TIME = .5 minutes;
 
-	// This will be set to false once the match is finished. 
+	// This will be set to true once all the teams are filled. 
+	bool matchIsLocked = false;
+
+	// This will be set to true once the match is finished. 
 	bool matchIsFinished = false;
 
 	function HODL(uint8 size) public {
@@ -45,6 +48,9 @@ contract HODL {
 	}
 
 	function deposit(uint8 teamNumber) public payable {
+		// Make sure that the match is not locked and users can still join. 
+		require(matchIsLocked == false);
+
 		// User must pick either 1 or 2 for the team number.
 		require(teamNumber == 1 || teamNumber == 2);
 
@@ -69,7 +75,7 @@ contract HODL {
 			// If the user is already in a team, label the user malicious and revert. 
 			malicious[msg.sender] = true;
 			revert();
-		} else if (teams[teamNumber].players[msg.sender].userDeposit.releaseTime == 0) {
+		} else if (teams[teamNumber].players[msg.sender].assignedToTeam == false) {
 			// Add the user to the specified team and set their release time. 
 			uint256 releaseTime = now + RELEASE_TIME;
 			teams[teamNumber].players[msg.sender].userDeposit = Deposit(msg.value, releaseTime);
@@ -79,6 +85,16 @@ contract HODL {
 
 			// Update the size of the team.
 			teams[teamNumber].playersCurrentSize = teams[teamNumber].playersCurrentSize + 1;
+
+
+			///////////////////////////////////////////////////////////////////////
+
+
+			// Check if both teams are filled.
+			// If both teams are filled set flag to not allow any other users to join.
+			if (teams[1].playersCurrentSize == teamSize || teams[2].playersCurrentSize == teamSize) {
+				matchIsLocked = true;
+			} 
 		}
 	}
 
