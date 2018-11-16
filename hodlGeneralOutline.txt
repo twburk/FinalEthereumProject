@@ -50,7 +50,7 @@ Smart Contract:
 		- Deposit the winning amount to the winning players.
 		- Return the amount of money deposited by the losing players minus
 			the amount of their respective penalties. 
-Side notes and updates:
+
 
 - Matches will not be part of the contract.
 - There will only be one match per contract.
@@ -58,10 +58,10 @@ Side notes and updates:
 
 - Set flag to lock adding people to teams and adding deposits to players.
 - Once this flag is locked, any player trying to change anything will be malicious.
-  - The user will then face a penalty fee.
+	- The user will then face a penalty fee.
 
 - Need to identify what fields a (Deposit, Player, Team) should have.
 - Now need to implement withdrawal method to return money to users who are not
-malicious and are not on the losing team.
+	malicious and are not on the losing team.
 - Also need to calculate the losses of the losing players and the malicious 
-players and split it between the winning and non malicious players. 
+	players and split it between the winning and non malicious players. 

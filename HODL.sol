@@ -1,10 +1,9 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.10;
 
 contract HODL {
 
 	struct Deposit {
 		uint256 value;
-		uint256 releaseTime;
 	}
 
 	struct Player {
@@ -25,6 +24,7 @@ contract HODL {
 	mapping(address => bool) malicious;
 
 	uint8 public teamSize;
+
 	// Time will be varied and updated. 
 	uint256 public RELEASE_TIME = .5 minutes;
 
@@ -33,6 +33,8 @@ contract HODL {
 
 	// This will be set to true once the match is finished. 
 	bool matchIsFinished = false;
+
+	uint8 winningTeamIndex;
 
 	function HODL(uint8 size) public {
 		// The size of the teams must greater than 0 and less than 4. 
@@ -78,6 +80,7 @@ contract HODL {
 		} else if (teams[teamNumber].players[msg.sender].assignedToTeam == false) {
 			// Add the user to the specified team and set their release time. 
 			uint256 releaseTime = now + RELEASE_TIME;
+
 			teams[teamNumber].players[msg.sender].userDeposit = Deposit(msg.value, releaseTime);
 
 			// Set assignedToTeam flag to true. 
@@ -86,18 +89,35 @@ contract HODL {
 			// Update the size of the team.
 			teams[teamNumber].playersCurrentSize = teams[teamNumber].playersCurrentSize + 1;
 
-
 			///////////////////////////////////////////////////////////////////////
 
 
 			// Check if both teams are filled.
 			// If both teams are filled set flag to not allow any other users to join.
-			if (teams[1].playersCurrentSize == teamSize || teams[2].playersCurrentSize == teamSize) {
+			if (teams[1].playersCurrentSize == teamSize && teams[2].playersCurrentSize == teamSize) {
 				matchIsLocked = true;
 			} 
 		}
 	}
 
+	function initiateWithdrawal() public {
+		// Check if matchIsFinished is true.
+		// If it is true, then do not continue function and call the revert() function.
+		// if it is false, then continue function and calc losses and pay winners and non malicious players. 
+
+		// Check what team the player that initiates withdrawal is in.
+
+		// Make the winningTeamIndex equal to the index of the opposite team.
+
+		// call the calculate loss function to calculate how money is going to be summed up to.
+		// Should be the sum of the penalties from the losing team and the penalties from the malicious players.
+		// Divide that sum by all the winning players (based on the percentage of how much they invested.)
+		// Pay each winner their respective winning amount. 
+
+		// set the matchIsFinished vairable to true so that functions can no longer be called. 
+	}
+
+	// This function only with wirh releaseTime in the Deposite structure. 
 	function withdraw(uint8 teamNumber) public {
 		require(teamNumber == 1 || teamNumber == 2);
 		require(teams[teamNumber].players[msg.sender].userDeposit.value > 0);
