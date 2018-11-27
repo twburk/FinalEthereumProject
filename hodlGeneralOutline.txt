@@ -45,6 +45,9 @@ Smart Contract:
 		- Calculate how much each of the winning players gets.
 		- Fee rewards will be based off of percentages.
 		- Fee penalties will be based off of precentages. 
+		- 15% For losing players
+		- 25% For malicious players
+		- 40% For both 
 	- function payWinners() public
 		- Return the money to the winning players.
 		- Deposit the winning amount to the winning players.
@@ -64,4 +67,4 @@ Smart Contract:
 - Now need to implement withdrawal method to return money to users who are not
 	malicious and are not on the losing team.
 - Also need to calculate the losses of the losing players and the malicious 
-	players and split it between the winning and non malicious players. 
+	players and split it between the winning and non malicious players.
