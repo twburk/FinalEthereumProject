@@ -104,17 +104,31 @@ contract HODL {
 		// Check if matchIsFinished is true.
 		// If it is true, then do not continue function and call the revert() function.
 		// if it is false, then continue function and calc losses and pay winners and non malicious players. 
+		if(matchIsFinished == true){
+			revert();
+		}else if(matchIsFinished == false){
+			uint8 sum = 0;
 
-		// Check what team the player that initiates withdrawal is in.
+			// Check what team the player that initiates withdrawal is in.
+			// Make the winningTeamIndex equal to the index of the opposite team.
+			// call the calculate loss function to calculate how money is going to be summed up to.
+			// Should be the sum of the penalties from the losing team and the penalties from the malicious players.
+			if(teams[1].players[msg.sender] == true){
+				winningTeamIndex = 2;
+				sum = calculateLoss(1);
+			}else if(teams[2].players[msg.sender] == true){
+				winningTeamIndex = 1;
+				sum = calculateLoss(2);
+			}
 
-		// Make the winningTeamIndex equal to the index of the opposite team.
+			// Divide that sum by all the winning players (based on the percentage of how much they invested.)
+			// Pay each winner their respective winning amount. 
+			payWinner(winningTeamIndex, sum);
 
-		// call the calculate loss function to calculate how money is going to be summed up to.
-		// Should be the sum of the penalties from the losing team and the penalties from the malicious players.
-		// Divide that sum by all the winning players (based on the percentage of how much they invested.)
-		// Pay each winner their respective winning amount. 
-
-		// set the matchIsFinished vairable to true so that functions can no longer be called. 
+			// set the matchIsFinished vairable to true so that functions can no longer be called. 
+			matchIsFinished = true;
+		}
+		
 	}
 
 	// This function only with wirh releaseTime in the Deposite structure. 
@@ -127,5 +141,19 @@ contract HODL {
         
         teams[teamNumber].players[msg.sender].userDeposit.value = 0;
         teams[teamNumber].players[msg.sender].userDeposit.releaseTime = 0;
+	}
+
+	//sum of the penalties from the losing team and the penalties from the malicious players.
+	function calculateLoss(uint8 teamNumber) public {
+		uint8 sum = 0;
+
+
+
+		return sum;
+	}
+
+	// Pay each winner their respective winning amount
+	function payWinner(uint8 winningTeam, uint8 winningSum) public{
+
 	}
 }
