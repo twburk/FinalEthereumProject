@@ -199,7 +199,7 @@ contract HODL {
 		unit total = winningSum / arrayLength;
 
 		for(uint i=0; i < arrayLength; i++){
-			msg.sender.transfer(teams[teamNumber].players[msg.sender].userDeposit.value);
+			teams.players[tempArray[i]].transfer(total);
 		}
 
 	}
